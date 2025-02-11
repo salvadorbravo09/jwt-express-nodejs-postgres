@@ -14,6 +14,19 @@ const create = async ({ email, password, username }) => {
   return rows;
 };
 
+const findOneByEmail = async ({ email }) => {
+  const query = {
+    text: `
+      SELECT uid, email, password, username
+      WHERE email = $1
+    `,
+    values: [email],
+  };
+  const { rows } = await pool.query(query);
+  return rows;
+};
+
 export const UserModel = {
   create,
+  findOneByEmail,
 };
