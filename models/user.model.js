@@ -11,19 +11,19 @@ const create = async ({ email, password, username }) => {
   };
 
   const { rows } = await pool.query(query);
-  return rows;
+  return rows[0];
 };
 
-const findOneByEmail = async ({ email }) => {
+const findOneByEmail = async (email) => {
   const query = {
     text: `
-      SELECT uid, email, password, username
+      SELECT * FROM users
       WHERE email = $1
     `,
     values: [email],
   };
   const { rows } = await pool.query(query);
-  return rows;
+  return rows[0];
 };
 
 export const UserModel = {
