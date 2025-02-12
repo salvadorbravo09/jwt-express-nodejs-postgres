@@ -64,9 +64,13 @@ const login = async (req, res) => {
     }
 
     // Generamos el token JWT usando el email del usuario existente
-    const token = jwt.sign({ email: userExists.email }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign(
+      { email: userExists.email },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1h",
+      }
+    );
 
     // Retorna el token con la respuesta
     return res.status(200).json({ token });
@@ -76,7 +80,17 @@ const login = async (req, res) => {
   }
 };
 
+const profile = async (req, res) => {
+  try {
+    const user = await UserModel.findOneByEmail(req.email);
+    return res.status(200).json({ msg: user });
+  } catch (error) {
+    return res.status(500).json({ msg: "Error del servidor" });
+  }
+};
+
 export const UserController = {
   register,
   login,
+  profile,
 };
