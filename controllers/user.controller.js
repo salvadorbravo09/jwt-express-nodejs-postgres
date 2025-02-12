@@ -30,15 +30,9 @@ const register = async (req, res) => {
       username,
     });
 
-    const token = jwt.sign(
-      {
-        email: newUser.email,
-      },
-      process.env.JWT_SECRET, // Clave secreta del JWT
-      {
-        expiresIn: "1h",
-      }
-    );
+    const token = jwt.sign({ email: newUser.email }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
 
     // Devuelve el token en la respuesta
     return res.status(201).json({ token });
@@ -50,6 +44,32 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
   try {
+    const { email, password } = req.body;
+
+    // Verificamos los campos
+    if (!email || !password) {
+      res.status(400).json({ msg: "Se requiere los campos: email, password" });
+    }
+
+    // Buscamos el email en la BD y comprobamos si no existe
+    const userExists = await UserModel.findOneByEmail(email);
+    if (!userExists) {
+      return res.status(404).json({ msg: "Usuario no existe" });
+    }
+
+    // Si el email existe
+    const isMatch = await bcryptjs.compare(password, userExists.password); // Comparamos la contraseña enviada con la contraseña almacenada
+    if (!isMatch) {
+      return res.status(401).json({ msg: "Credenciales invalidas" });
+    }
+
+    // Generamos el token JWT usando el email del usuario existente
+    const token = jwt.sign({ email: userExists.email }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
+
+    // Retorna el token con la respuesta
+    return res.status(200).json({ token });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Error del servidor" });
