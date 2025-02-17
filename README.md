@@ -2,6 +2,9 @@
 
 ## Documentación
 
+### Instalación
+1. 
+
 ### Pasos para la Configuración
 
 1. **Crear archivo `.env`** para las variables de entorno.
