@@ -30,14 +30,42 @@ const findAll = async (req, res) => {
   const query = {
     text: `
       SELECT * FROM users
-    `
+    `,
   };
   const { rows } = await pool.query(query);
   return rows;
+};
+
+const findOneByUid = async (uid) => {
+  const query = {
+    text: `
+      SELECT * FROM users
+      WHERE uid = $1
+    `,
+    values: [uid],
+  };
+  const { rows } = await pool.query(query);
+  return rows[0];
+};
+
+const updateRoleVet = async (uid) => {
+  const query = {
+    text: `
+      UPDATE users
+      SET role_id = 2
+      WHERE uid = $1
+      RETURNING email, username, role_id
+    `,
+    values: [uid],
+  };
+  const { rows } = await pool.query(query);
+  return rows[0];
 };
 
 export const UserModel = {
   create,
   findOneByEmail,
   findAll,
+  findOneByUid,
+  updateRoleVet,
 };
