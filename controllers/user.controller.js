@@ -30,9 +30,13 @@ const register = async (req, res) => {
       username,
     });
 
-    const token = jwt.sign({ email: newUser.email }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign(
+      { email: newUser.email, role_id: newUser.role_id },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1h",
+      }
+    );
 
     // Devuelve el token en la respuesta
     return res.status(201).json({ token });
@@ -65,7 +69,7 @@ const login = async (req, res) => {
 
     // Generamos el token JWT usando el email del usuario existente
     const token = jwt.sign(
-      { email: userExists.email },
+      { email: userExists.email, role_id: userExists.role_id },
       process.env.JWT_SECRET,
       {
         expiresIn: "1h",
@@ -89,8 +93,18 @@ const profile = async (req, res) => {
   }
 };
 
+const findAll = async (req, res) => {
+  try {
+    const users = await UserModel.findAll();
+    return res.status(200).json({ msg: users });
+  } catch (error) {
+    return res.status(500).json({ msg: "Error del servidor" });
+  }
+};
+
 export const UserController = {
   register,
   login,
   profile,
+  findAll,
 };
