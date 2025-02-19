@@ -102,9 +102,26 @@ const findAll = async (req, res) => {
   }
 };
 
+const updateRoleVet = async (req, res) => {
+  try {
+    const { uid } = req.params;
+    const user = await UserModel.findOneByUid(uid);
+
+    if (!user) {
+      return res.status(404).json({ msg: "Usuario no existe" });
+    }
+
+    const updatedUser = await UserModel.updateRoleVet(uid);
+    return res.status(200).json({ msg: updatedUser });
+  } catch (error) {
+    return res.status(500).json({ msg: "Error del servidor" });
+  }
+};
+
 export const UserController = {
   register,
   login,
   profile,
   findAll,
+  updateRoleVet,
 };
