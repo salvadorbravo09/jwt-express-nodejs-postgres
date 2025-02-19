@@ -12,6 +12,7 @@ router.get("/profile", verifyToken, UserController.profile);
 
 // Rutas administrador
 // Primero verifica que el token sea valido, que sea admin y luego entra al controlador
-router.get("/", verifyToken, verifyAdmin, UserController.findAll); 
+router.get("/", verifyToken, verifyAdmin, UserController.findAll);
+router.put('/update-role-vet/:uid', verifyToken, verifyAdmin, UserController.updateRoleVet)
 
 export default router;
