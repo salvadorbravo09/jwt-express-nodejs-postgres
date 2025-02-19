@@ -3,7 +3,11 @@
 ## Documentación
 
 ### Instalación
-1. 
+### 1. Clona el repositorio
+```bash
+git clone https://github.com/salvadorbravo09/jwt-express-nodejs-postgres.git
+cd jwt-express-nodejs-postgres
+```
 
 ### Pasos para la Configuración
 
