@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { UserController } from "../controllers/user.controller.js";
-import { verifyToken } from "../middleware/jwt.middleware.js";
+import { verifyAdmin, verifyToken } from "../middleware/jwt.middleware.js";
 
 const router = Router();
 
@@ -9,5 +9,9 @@ router.post("/register", UserController.register);
 router.post("/login", UserController.login);
 // Rutas protegidas (verificacion del token)
 router.get("/profile", verifyToken, UserController.profile);
+
+// Rutas administrador
+// Primero verifica que el token sea valido, que sea admin y luego entra al controlador
+router.get("/", verifyToken, verifyAdmin, UserController.findAll); 
 
 export default router;
